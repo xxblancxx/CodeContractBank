@@ -1,1 +1,6 @@
 D:\Projects\DesignByContractBank\CodeContractBank\bin\Debug\CodeContractBank.exe.config
+D:\Projects\DesignByContractBank\CodeContractBank\bin\Debug\CodeContractBank.exe
+D:\Projects\DesignByContractBank\CodeContractBank\bin\Debug\CodeContractBank.pdb
+D:\Projects\DesignByContractBank\CodeContractBank\obj\Debug\CodeContractBank.exe
+D:\Projects\DesignByContractBank\CodeContractBank\obj\Debug\CodeContractBank.pdb
+D:\Projects\DesignByContractBank\CodeContractBank\obj\Debug\CodeContractBank.rewritten

@@ -19,6 +19,9 @@ namespace CodeContractBank
             Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(name) && !String.IsNullOrWhiteSpace(name));
             // Postcondition: Name is now name
             Contract.EnsuresOnThrow<AggregateException>(Name == name);
+            Name = name;
+            Customers = new Dictionary<int, Customer>();
+            Accounts = new Dictionary<int, Account>();
         }
 
         public void Move(double amount, int sourceAccount, int targetAccount)
@@ -30,6 +33,12 @@ namespace CodeContractBank
             var sourceMovement = (Movement)Accounts[sourceAccount].Movements.Where(m => m.Amount == amount * -1);
             var targetMovement = (Movement)Accounts[targetAccount].Movements.Where(m => m.Amount == amount);
             Contract.EnsuresOnThrow<AggregateException>(sourceMovement != null && targetMovement != null && (targetMovement.Amount + sourceMovement.Amount) == 0);
+
+            Account source = Accounts[sourceAccount];
+            Account target = Accounts[targetAccount];
+
+            source.Movements.Add(new Movement(DateTime.Now, amount * -1));
+            target.Movements.Add(new Movement(DateTime.Now, amount));
         }
 
         public void MakeStatement(int customerId, int accountNumber)
@@ -37,16 +46,41 @@ namespace CodeContractBank
             Contract.Requires<ArgumentException>(Accounts[accountNumber] != null && Customers[customerId] != null);
             // Should probably just do Console.Writeline. therefore return void
 
+            var customer = Customers[customerId];
+            var account = Accounts[accountNumber];
+
+            Console.WriteLine(Name);
+            Console.WriteLine("Bank Statement");
+            Console.WriteLine("________________________________________________");
+            Console.WriteLine(customer.Name);
+            Console.Write("Customer Id: " + customer.Id);
+            Console.WriteLine("         " + "Account No: " + account.Number);
+            Console.WriteLine("________________________________________________");
+            Console.WriteLine("Total balance: " + account.Balance);
+            Console.WriteLine("________________________________________________");
+            foreach (var movement in account.Movements)
+            {
+                Console.Write(movement.Amount + "DKK" + "  --  ");
+                Console.WriteLine(movement.Date);
+            }
+
         }
         [ContractInvariantMethod]
-        protected void ObjectInvariant()
+        private void ObjectInvariant()
         {
             // Invariably, the sum of all movements in all accounts should ALWAYS equals 0.
             // Reason; Double Entry Bookkeeping.
+            
+           // var sum = Accounts.ToList().ForEach(a => a.Value.Movements.Sum(m => m.Amount));
+            Contract.Invariant(GetSumOfMovements() == 0.0);
+        }
+
+        [Pure]
+        private double GetSumOfMovements()
+        {
             double sum = 0.0;
             Accounts.Values.ToList().ForEach(a => sum += a.Movements.Sum(m => m.Amount));
-           // var sum = Accounts.ToList().ForEach(a => a.Value.Movements.Sum(m => m.Amount));
-            Contract.Invariant(sum == 0.0);
+            return sum;
         }
     }
 }

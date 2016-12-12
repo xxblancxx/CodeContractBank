@@ -28,6 +28,9 @@ namespace CodeContractBank
 
             // Postcondition: Properties are given values from constructor parameter.
             Contract.EnsuresOnThrow<AggregateException>(Number == number);
+
+            Number = number;
+            Movements = new List<Movement>();
         }
     }
 }

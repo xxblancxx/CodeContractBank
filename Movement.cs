@@ -15,11 +15,15 @@ namespace CodeContractBank
 
         public Movement(DateTime date, double amount)
         {
-            // Precondition: DateTime is not null, and amount is not 0 or negative.
-            Contract.Requires<ArgumentException>(date != null && amount > 0);
+            // Precondition: DateTime is not null, and amount is not 0
+            // Can be negative, to create credit from source.
+            Contract.Requires<ArgumentException>(date != null && amount != 0);
 
             // Postcondition: Properties are given values from constructor parameter.
             Contract.EnsuresOnThrow<AggregateException>(Date == date && Amount == amount);
+
+            Date = date;
+            Amount = amount;
         }
     }
 }

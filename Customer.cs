@@ -18,8 +18,13 @@ namespace CodeContractBank
             // Precondition: id isn't 0 or negative, and name is not null, empty or whitespace.
             Contract.Requires<ArgumentException>(id > 0 && !String.IsNullOrEmpty(name) && !String.IsNullOrWhiteSpace(name));
 
-            // Postcondition: Name and Id is assigned values given as parameters. A new account is created for the customer.
-            Contract.EnsuresOnThrow<AggregateException>(Name == name && Id == id && Accounts.Count == 1);
+            // Postcondition: Name and Id is assigned values given as parameters.
+            // Revised - No new account added. Because of unique number..
+            Contract.EnsuresOnThrow<AggregateException>(Name == name && Id == id);
+
+            Id = id;
+            Name = name;
+            Accounts = new Dictionary<int, Account>();
         }
 
         public Customer(int id, string name, Account firstAccount)
@@ -28,7 +33,12 @@ namespace CodeContractBank
             Contract.Requires<ArgumentException>(id > 0 && !String.IsNullOrEmpty(name) && !String.IsNullOrWhiteSpace(name) && firstAccount != null);
 
             // Postcondition: Name and Id is assigned values given as parameters. firstAccount is added to Accounts.
-            Contract.EnsuresOnThrow<AggregateException>(Name == name && Id == id && && Accounts.Count == 1 && Accounts[firstAccount.Number] == firstAccount);
+            Contract.EnsuresOnThrow<AggregateException>(Name == name && Id == id && Accounts.Count == 1 && Accounts[firstAccount.Number] == firstAccount);
+
+            Id = id;
+            Name = name;
+            Accounts = new Dictionary<int, Account>();
+            Accounts.Add(firstAccount.Number, firstAccount);
         }
     }
 }
