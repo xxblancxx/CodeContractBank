@@ -1,0 +1,1 @@
+D:\Projects\DesignByContractBank\CodeContractBank\bin\Debug\CodeContractBank.exe.config
